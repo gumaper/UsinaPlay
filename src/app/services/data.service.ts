@@ -1,21 +1,13 @@
 import { Injectable } from '@angular/core';
-import { Firestore, addDoc, collection, collectionData, doc, docData, updateDoc } from '@angular/fire/firestore';
+import { Firestore, addDoc, collection, collectionData, doc, docData } from '@angular/fire/firestore';
 import { Observable } from 'rxjs';
 import { map } from 'rxjs/operators';
 
 export interface Slide {
   id?: string;
-  type?: number;
-  title: string;
-  order: number;
-  contents: Content[];
-}
-
-export interface Content {
-  background: string;
-  order: number;
   title: string;
   subtitle: string;
+  image: string;
 }
 
 @Injectable({
@@ -23,9 +15,11 @@ export interface Content {
 })
 export class DataService {
   slides: Observable<Slide[]>;
+  programas: Observable<Slide[]>;
 
   constructor(private firestore: Firestore) {
     this.slides = this.getSlideCollection();
+    this.programas = this.getProgramaCollection();
   }
 
   getSlideCollection(): Observable<Slide[]> {
@@ -42,8 +36,17 @@ export class DataService {
     return docData(slideRef, { idField: 'id' }) as Observable<Slide>;
   }
 
-  addContent(slide: Slide) {
-    const slideDocRef = doc(this.firestore, `slides/${slide.id}`);
-    return updateDoc(slideDocRef, { contents: slide.contents });
+  getProgramaCollection(): Observable<Slide[]> {
+    const programasRef = collection(this.firestore, 'programas');
+    return collectionData(programasRef, { idField: 'id' }) as Observable<Slide[]>;
+  }
+
+  getProgramas(): Observable<Slide[]> {
+    return this.programas.pipe(map((slides) => slides.reverse()));
+  }
+
+  addPrograma(slide: Slide) {
+    const slideDocRef = collection(this.firestore, `programas`);
+    return addDoc(slideDocRef, slide);
   }
 }

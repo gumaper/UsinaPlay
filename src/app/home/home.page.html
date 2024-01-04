@@ -45,33 +45,20 @@
 <ion-content [fullscreen]="true">
   <div class="slides" *ngFor="let slide of (slides$ | async); let indice = index">
     <div class="slides__header">
-      <h2 class="ion-text-uppercase">{{slide.title}}</h2>
-      <ng-template #other>
-        <ion-badge color="warning" slot="end">novo</ion-badge>
-      </ng-template>
+      <h2 class="ion-text-uppercase">PERSONAGEL ONLINE</h2>
 
-      <ion-icon
-        *ngIf="slide.order === 1 && indice === 0; else other"
-        color="warning"
-        size="large"
-        name="add-circle-outline"
-      ></ion-icon>
+      <ion-icon color="warning" size="large" name="add-circle-outline"></ion-icon>
     </div>
 
     <swiper-container [slidesPerView]="'1.3'">
-      <swiper-slide *ngIf="slide.order === 1 && indice === 0">
+      <swiper-slide *ngIf="indice === 0">
         <ion-card
           [ngStyle]="{'background-image': 'url(https://img.freepik.com/fotos-premium/contemporaneo-impecavel-centro-de-fitness-interior-generative-ai_391052-10889.jpg)'}"
         >
           <ion-card-content>
             <div class="shadow">
               <ion-label>
-                <ion-icon
-                  (click)="addNovoPrograma(slide)"
-                  color="dark"
-                  size="large"
-                  name="add-circle-outline"
-                ></ion-icon>
+                <ion-icon (click)="addNovoPrograma()" color="dark" size="large" name="add-circle-outline"></ion-icon>
                 <h2 style="color: #fff" class="ion-text-uppercase">NOVO<br />TREINO</h2>
               </ion-label>
             </div>
@@ -79,16 +66,37 @@
         </ion-card>
       </swiper-slide>
 
-      <swiper-slide *ngFor="let content of slide.contents">
-        <ion-card [ngStyle]="{'background-image': 'url(' + content.background + ')'}">
+      <swiper-slide>
+        <ion-card [ngStyle]="{'background-image': 'url(' + slide.image + ')'}">
           <ion-card-content>
             <ion-label>
-              <p>{{content.subtitle}}</p>
-              <h2 class="ion-text-uppercase">{{content.title}}</h2>
+              <p>{{slide.subtitle}}</p>
+              <h2 class="ion-text-uppercase">{{slide.title}}</h2>
             </ion-label>
           </ion-card-content>
         </ion-card>
       </swiper-slide>
+    </swiper-container>
+  </div>
+
+  <div class="slides">
+    <div class="slides__header">
+      <h2 class="ion-text-uppercase">Programas</h2>
+      <ion-badge color="warning" slot="end">novo</ion-badge>
+    </div>
+    <swiper-container [slidesPerView]="'1.3'" *ngIf="!loading">
+      <ng-container *ngFor="let programa of (programas$ | async)">
+        <swiper-slide>
+          <ion-card [ngStyle]="{'background-image': 'url(' + programa.image + ')'}">
+            <ion-card-content>
+              <ion-label>
+                <p>{{programa.subtitle}}</p>
+                <h2 class="ion-text-uppercase">{{programa.title}}</h2>
+              </ion-label>
+            </ion-card-content>
+          </ion-card>
+        </swiper-slide>
+      </ng-container>
     </swiper-container>
   </div>
 </ion-content>
